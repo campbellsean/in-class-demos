@@ -13,6 +13,7 @@ class App extends Component {
   }
 
   componentDidMount() {
+<<<<<<< HEAD
 
     firebase.auth().onAuthStateChanged((firebaseUser) => {
       if (firebaseUser) {
@@ -28,6 +29,20 @@ class App extends Component {
 
     this.unregisterFunction();
 
+=======
+    this.unregisterFunction = firebase.auth().onAuthStateChanged((firebaseUser) => {
+      if(firebaseUser){ //someone logged in!
+        this.setState({user: firebaseUser});
+      }
+      else { //someone logged out
+        this.setState({user:null});
+      }
+    });
+  }
+
+  componentWillUnmount() {
+    this.unregisterFunction();
+>>>>>>> 886fa5aba9446b25af39cb1acf599c6dabab03f8
   }
 
   //A callback function for registering new users
@@ -49,10 +64,22 @@ class App extends Component {
       })
     // sign up a person
 
+    firebase.auth()
+      .createUserWithEmailAndPassword(this.state.email, this.state.password)
+        .then((firebaseUser) => {
+          //do some stuff with the user
+          let promise = firebaseUser.updateProfile({displayName:this.state.username});
+          return promise;
+        })
+        .catch((err) => this.setState({errorMessage: err.message}))
+        .then(() => {
+          this.setState({email:'',password:'',username:''});          
+        })
   }
 
   //A callback function for logging in existing users
   handleSignIn() {
+<<<<<<< HEAD
     this.setState({ errorMessage: null }); //clear old error
 
     firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
@@ -69,6 +96,20 @@ class App extends Component {
       .catch((err) => this.setState({ errorMessage: err.message }))
 
     // sign out a person
+=======
+    this.setState({errorMessage:null}); //clear old error
+
+    firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
+      .catch((err) => this.setState({errorMessage: err.message}))    
+  }
+
+  //A callback function for logging out the current user
+  handleSignOut(){
+    this.setState({errorMessage:null}); //clear old error
+    
+    firebase.auth().signOut()
+      .catch((err) => this.setState({errorMessage: err.message}))    
+>>>>>>> 886fa5aba9446b25af39cb1acf599c6dabab03f8
   }
 
   handleChange(event) {
@@ -84,12 +125,19 @@ class App extends Component {
     return (
       <div className="container">
         {this.state.errorMessage &&
-          <p class="alert alert-danger">{this.state.errorMessage}</p>
+          <p className="alert alert-danger">{this.state.errorMessage}</p>
         }
 
+<<<<<<< HEAD
         {this.state.user &&
           <div className="alert alert-success">
             <h1>Logged in as {this.state.user.displayName}</h1></div>
+=======
+        {this.state.user && 
+          <div className="alert alert-success">
+            <h1>Logged in as {this.state.user.displayName}</h1>
+          </div>
+>>>>>>> 886fa5aba9446b25af39cb1acf599c6dabab03f8
         }
 
         <div className="form-group">
